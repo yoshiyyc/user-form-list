@@ -5,8 +5,8 @@ Therefore, please conduct the following steps after downloading the folder and i
 
 ### `json-server --watch db.json`
 
-It will set up the db.json on  [http://localhost:3000](http://localhost:300).
-Necessary step for API connection.
+It will set up the db.json on  [http://localhost:3000](http://localhost:300).\
+Necessary step for API connection, check the [page](https://www.npmjs.com/package/json-server) for more details.
 
 ### `npm start`
 
