@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/interview-cheatsheet/static/css/main.089605bc.css",
+    "main.js": "/interview-cheatsheet/static/js/main.af8d0957.js",
+    "static/js/787.eda2bada.chunk.js": "/interview-cheatsheet/static/js/787.eda2bada.chunk.js",
+    "index.html": "/interview-cheatsheet/index.html",
+    "main.089605bc.css.map": "/interview-cheatsheet/static/css/main.089605bc.css.map",
+    "main.af8d0957.js.map": "/interview-cheatsheet/static/js/main.af8d0957.js.map",
+    "787.eda2bada.chunk.js.map": "/interview-cheatsheet/static/js/787.eda2bada.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.089605bc.css",
+    "static/js/main.af8d0957.js"
+  ]
+}
