@@ -53,13 +53,6 @@ function List() {
     setShowData(tempData);
   }, [search, filteredData]);
 
-  const formatDate = (timestamp) => {
-    let date = new Date(timestamp);
-    return `${date.getFullYear().toString()}-${(date.getMonth() + 1)
-      .toString()
-      .padStart(2, 0)}-${date.getDate().toString().padStart(2, 0)}`;
-  };
-
   return (
     <div>
       <h1 className="text-center mb-3">User List</h1>
@@ -137,7 +130,7 @@ function List() {
             return (
               <tr key={i.id}>
                 <td>{i.name}</td>
-                <td>{formatDate(i.birthday)}</td>
+                <td>{i.birthday}</td>
                 <td>{i.native === "true" ? "Yes" : "No"}</td>
                 <td>{i.age}</td>
                 <td>{i.address}</td>
