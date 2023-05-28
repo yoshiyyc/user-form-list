@@ -12,6 +12,7 @@ function List() {
   const [currentItems, setCurrentItems] = useState([]);
   const [itemsPerPage] = useState(10);
   const [pageCount, setPageCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
   const [itemOffset, setItemOffset] = useState(0); // ItemOffset is the index of the first item of the current page
 
   // Show data
@@ -32,6 +33,8 @@ function List() {
 
   // Filter Section
   const handleRadioChange = (e) => {
+    resetPage();
+
     let tempUserData = [];
 
     if (e.target.value === "true") {
@@ -54,7 +57,10 @@ function List() {
   };
 
   useEffect(() => {
+    resetPage();
+
     setResultData(categorizedData);
+
     let tempData = categorizedData.filter((i) => {
       return i.name.toLowerCase().includes(searchTerm.toLowerCase());
     });
@@ -64,8 +70,15 @@ function List() {
 
   // Page related actions
   const handlePageClick = (e) => {
+    console.log(e);
     const newOffset = (e.selected * itemsPerPage) % resultData.length;
     setItemOffset(newOffset);
+    setCurrentPage(e.selected);
+  };
+
+  const resetPage = () => {
+    setItemOffset(0);
+    setCurrentPage(0);
   };
 
   useEffect(() => {
@@ -75,13 +88,13 @@ function List() {
   }, [itemOffset, itemsPerPage, resultData]);
 
   return (
-    <div>
+    <div className="container">
       <h1 className="text-center mb-3">User List</h1>
-      <div className="row d-flex justify-content-between">
-        <fieldset className="col-6 row mb-3">
-          <legend className="col-form-label col-sm-2 pt-0">Native</legend>
+      <div className="row d-flex flex-column flex-md-row justify-content-sm-between align-items-center">
+        <fieldset className="col col-md-6 row mb-3 mb-md-0">
+          <legend className="col-form-label col-sm-2 p-0">Native</legend>
           <div className="col-sm-10 d-flex">
-            <div className="form-check mx-3">
+            <div className="form-check me-3 mx-md-3">
               <input
                 className="form-check-input"
                 type="radio"
@@ -123,10 +136,10 @@ function List() {
             </div>
           </div>
         </fieldset>
-        <div className="col-6 row">
+        <div className="col col-md-6 row">
           <input
             type="text"
-            className="col-6 ms-auto rounded"
+            className="col col-md-6 ms-md-auto rounded"
             id="search"
             name="search"
             placeholder="Search"
@@ -180,6 +193,7 @@ function List() {
           containerClassName="pagination"
           activeClassName="active"
           renderOnZeroPageCount={null}
+          forcePage={currentPage}
         />
       </div>
     </div>
