@@ -28,7 +28,6 @@ function Form() {
   const navigate = useNavigate();
 
   const onSubmit = async (submitData) => {
-    console.log(submitData);
     try {
       const res = await axios.post("http://localhost:3000/users", {
         id: Date.now(),

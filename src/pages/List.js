@@ -70,7 +70,6 @@ function List() {
 
   // Page related actions
   const handlePageClick = (e) => {
-    console.log(e);
     const newOffset = (e.selected * itemsPerPage) % resultData.length;
     setItemOffset(newOffset);
     setCurrentPage(e.selected);
