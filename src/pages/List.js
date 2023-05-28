@@ -1,23 +1,36 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import ReactPaginate from "react-paginate";
 
 function List() {
   const [userData, setUserData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
-  const [search, setSearch] = useState("");
-  const [showData, setShowData] = useState([]);
+  const [categorizedData, setCategorizedData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [resultData, setResultData] = useState([]);
 
+  // Pagination-related variables
+  const [currentItems, setCurrentItems] = useState([]);
+  const [itemsPerPage] = useState(10);
+  const [pageCount, setPageCount] = useState(0);
+  const [itemOffset, setItemOffset] = useState(0); // ItemOffset is the index of the first item of the current page
+
+  // Show data
   const getData = async () => {
     try {
       const res = await axios.get("http://localhost:3000/users");
       setUserData(res.data);
-      setFilteredData(res.data);
-      setShowData(res.data);
+      setCategorizedData(res.data);
+      setResultData(res.data);
     } catch (error) {
       console.log(error);
     }
   };
 
+  useEffect(() => {
+    getData();
+  }, []);
+
+  // Filter Section
   const handleRadioChange = (e) => {
     let tempUserData = [];
 
@@ -25,33 +38,41 @@ function List() {
       tempUserData = userData.filter((i) => {
         return i.native === "true";
       });
-      setFilteredData(tempUserData);
+      setCategorizedData(tempUserData);
     } else if (e.target.value === "false") {
       tempUserData = userData.filter((i) => {
         return i.native === "false";
       });
-      setFilteredData(tempUserData);
+      setCategorizedData(tempUserData);
     } else {
-      setFilteredData(userData);
+      setCategorizedData(userData);
     }
   };
 
   const handleSearchChange = (e) => {
-    setSearch(e.target.value);
+    setSearchTerm(e.target.value);
   };
 
   useEffect(() => {
-    getData();
-  }, []);
-
-  useEffect(() => {
-    setShowData(filteredData);
-    let tempData = filteredData.filter((i) => {
-      return i.name.toLowerCase().includes(search.toLowerCase());
+    setResultData(categorizedData);
+    let tempData = categorizedData.filter((i) => {
+      return i.name.toLowerCase().includes(searchTerm.toLowerCase());
     });
 
-    setShowData(tempData);
-  }, [search, filteredData]);
+    setResultData(tempData);
+  }, [searchTerm, categorizedData]);
+
+  // Page related actions
+  const handlePageClick = (e) => {
+    const newOffset = (e.selected * itemsPerPage) % resultData.length;
+    setItemOffset(newOffset);
+  };
+
+  useEffect(() => {
+    const endOffset = itemOffset + itemsPerPage;
+    setCurrentItems(resultData.slice(itemOffset, endOffset));
+    setPageCount(Math.ceil(resultData.length / itemsPerPage));
+  }, [itemOffset, itemsPerPage, resultData]);
 
   return (
     <div>
@@ -109,7 +130,7 @@ function List() {
             id="search"
             name="search"
             placeholder="Search"
-            value={search}
+            value={searchTerm}
             onChange={handleSearchChange}
             required
           />
@@ -126,7 +147,7 @@ function List() {
           </tr>
         </thead>
         <tbody>
-          {showData.map((i) => {
+          {currentItems.map((i) => {
             return (
               <tr key={i.id}>
                 <td>{i.name}</td>
@@ -139,6 +160,28 @@ function List() {
           })}
         </tbody>
       </table>
+      <div className="d-flex justify-content-center my-5">
+        <ReactPaginate
+          nextLabel=">"
+          onPageChange={handlePageClick}
+          pageRangeDisplayed={5}
+          marginPagesDisplayed={2}
+          pageCount={pageCount}
+          previousLabel="<"
+          pageClassName="page-item"
+          pageLinkClassName="page-link"
+          previousClassName="page-item"
+          previousLinkClassName="page-link"
+          nextClassName="page-item"
+          nextLinkClassName="page-link"
+          breakLabel="..."
+          breakClassName="page-item"
+          breakLinkClassName="page-link"
+          containerClassName="pagination"
+          activeClassName="active"
+          renderOnZeroPageCount={null}
+        />
+      </div>
     </div>
   );
 }
