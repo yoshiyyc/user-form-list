@@ -10,6 +10,7 @@ function Form() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -21,6 +22,9 @@ function Form() {
       gender: "",
       age: 0,
       address: "",
+      username: "",
+      password: "",
+      passwordConfirm: "",
       agreement: false,
     },
   });
@@ -94,7 +98,7 @@ function Form() {
         </div>
         <div className="row mb-3">
           <label htmlFor="phone" className="col-sm-2 col-form-label">
-            <span className="text-danger">*</span>Phone Number
+            <span className="text-danger">*</span>Mobile Phone
           </label>
           <div className="col-sm-10">
             <input
@@ -102,15 +106,12 @@ function Form() {
               className="form-control"
               id="phone"
               name="phone"
+              placeholder="09XX-XXXXXX"
               {...register("phone", {
                 required: "Required",
-                minLength: {
-                  value: 6,
-                  message: "Phone number must be at least 6 digits",
-                },
-                maxLength: {
-                  value: 12,
-                  message: "Phone number must be at most 12 digits",
+                pattern: {
+                  value: /^09\d{2}-\d{3}-?\d{3}$/,
+                  message: "Invalid format",
                 },
               })}
             />
@@ -143,32 +144,34 @@ function Form() {
           <legend className="col-form-label col-sm-2 pt-0">
             <span className="text-danger">*</span>Native
           </legend>
-          <div className="col-sm-10 d-flex">
-            <div className="form-check me-3">
-              <input
-                className="form-check-input"
-                type="radio"
-                name="native"
-                id="isNative"
-                value="true"
-                {...register("native", { required: "Required" })}
-              />
-              <label className="form-check-label" htmlFor="isNative">
-                Yes
-              </label>
-            </div>
-            <div className="form-check me-3">
-              <input
-                className="form-check-input"
-                type="radio"
-                name="native"
-                id="isNotNative"
-                value="false"
-                {...register("native", { required: "Required" })}
-              />
-              <label className="form-check-label" htmlFor="isNotNative">
-                No
-              </label>
+          <div className="col-sm-10">
+            <div className="d-flex">
+              <div className="form-check me-3">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="native"
+                  id="isNative"
+                  value="true"
+                  {...register("native", { required: "Required" })}
+                />
+                <label className="form-check-label" htmlFor="isNative">
+                  Yes
+                </label>
+              </div>
+              <div className="form-check me-3">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="native"
+                  id="isNotNative"
+                  value="false"
+                  {...register("native", { required: "Required" })}
+                />
+                <label className="form-check-label" htmlFor="isNotNative">
+                  No
+                </label>
+              </div>
             </div>
             {errors.native && (
               <p className="text-danger">{errors.native.message}</p>
@@ -176,7 +179,7 @@ function Form() {
           </div>
         </fieldset>
         <div className="row mb-3">
-          <label htmlFor="email" className="col-sm-2 col-form-label">
+          <label htmlFor="gender" className="col-sm-2 col-form-label">
             <span className="text-danger">*</span>Gender
           </label>
           <div className="col-sm-10">
@@ -227,6 +230,81 @@ function Form() {
               name="address"
               {...register("address")}
             />
+          </div>
+        </div>
+        <hr />
+        <div className="row mb-3">
+          <label htmlFor="username" className="col-sm-2 col-form-label">
+            <span className="text-danger">*</span>Username
+          </label>
+          <div className="col-sm-10">
+            <input
+              type="text"
+              className="form-control"
+              id="username"
+              name="username"
+              {...register("username", {
+                required: "Required",
+                pattern: {
+                  value: /^[A-Za-z0-9]*$/gi,
+                  message: "Need to be in alphabets or numbers",
+                },
+              })}
+            />
+            {errors.username && (
+              <p className="text-danger">{errors.username.message}</p>
+            )}
+          </div>
+        </div>
+        <div className="row mb-3">
+          <label htmlFor="password" className="col-sm-2 col-form-label">
+            <span className="text-danger">*</span>Password
+          </label>
+          <div className="col-sm-10">
+            <input
+              type="password"
+              className="form-control"
+              id="password"
+              name="password"
+              {...register("password", {
+                required: "Required",
+                minLength: {
+                  value: 4,
+                  message: "Password needs to be at least 4 characters",
+                },
+                maxLength: {
+                  value: 20,
+                  message: "Password needs to be at most 20 characters",
+                },
+              })}
+            />
+            {errors.password && (
+              <p className="text-danger">{errors.password.message}</p>
+            )}
+          </div>
+        </div>
+        <div className="row mb-3">
+          <label htmlFor="passwordConfirm" className="col-sm-2 col-form-label">
+            <span className="text-danger">*</span>Password Confirmation
+          </label>
+          <div className="col-sm-10">
+            <input
+              type="password"
+              className="form-control"
+              id="passwordConfirm"
+              name="passwordConfirm"
+              {...register("passwordConfirm", {
+                required: "Required",
+                validate: (val) => {
+                  if (watch("password") !== val) {
+                    return "Password does not match";
+                  }
+                },
+              })}
+            />
+            {errors.passwordConfirm && (
+              <p className="text-danger">{errors.passwordConfirm.message}</p>
+            )}
           </div>
         </div>
         <div className="form-check mt-5 mb-3">
